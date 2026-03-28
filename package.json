@@ -1,0 +1,13 @@
+{
+  "name": "architecture-diagram-sync",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate:excalidraw": "node tests/validate_excalidraw_official.mjs"
+  },
+  "dependencies": {
+    "@excalidraw/excalidraw": "0.18.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}

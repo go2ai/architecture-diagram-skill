@@ -1,0 +1,5 @@
+flowchart LR
+client[Client App] --> gateway[Public API]
+gateway --> orders_api[Orders API]
+orders_api --> orders_db[(Orders DB)]
+orders_api --> payments[Stripe]

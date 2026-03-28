@@ -1,0 +1,7 @@
+flowchart TD
+gateway[Public API] --> api[Orders API]
+api --> queue[Orders Queue]
+queue --> worker[Orders Worker]
+worker --> bucket[(Artifacts Bucket)]
+api --> db[(Orders DB)]
+api --> stripe[Stripe]

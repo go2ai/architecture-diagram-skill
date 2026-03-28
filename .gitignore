@@ -1,0 +1,9 @@
+# Python cache artifacts
+__pycache__/
+*.pyc
+node_modules/
+*.tgz
+
+# Local editor and OS files
+.DS_Store
+Thumbs.db

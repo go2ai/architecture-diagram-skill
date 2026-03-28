@@ -1,0 +1,6 @@
+name: Architecture Diagram Sync
+description: Keep Mermaid architecture diagrams aligned with repository reality and derived artifacts.
+default_prompt: |
+  Use this skill when a repository needs architecture diagrams reviewed, updated, or kept in sync with the codebase.
+  Mermaid is the canonical source of truth.
+  Treat .excalidraw files as derived artifacts and update Mermaid before regenerating any derived diagram output.
