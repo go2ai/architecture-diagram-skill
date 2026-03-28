@@ -33,8 +33,8 @@ PROHIBITED_PATTERNS: dict[str, re.Pattern[str]] = {
 NODE_PATTERN = re.compile(
     r"(?P<id>[A-Za-z_][A-Za-z0-9_]*)\s*(?P<shape>\[\[.*?\]\]|\[.*?\]|\(\(.*?\)\)|\(.*?\)|\{.*?\})"
 )
-EDGE_LABEL_PATTERN = re.compile(r"--\s*[^-][^-]*?\s*-->")
 SUBGRAPH_PATTERN = re.compile(r"^\s*subgraph\b", re.IGNORECASE)
+LABELED_EDGE_LINE_PATTERN = re.compile(r"--\s+[^-\n][^\n]*?\s+-->")
 
 
 @dataclass(slots=True)
@@ -65,6 +65,10 @@ def first_non_empty_line(text: str) -> tuple[int | None, str | None]:
         if stripped:
             return index, stripped
     return None, None
+
+
+def count_labeled_edges(text: str) -> int:
+    return sum(1 for line in text.splitlines() if LABELED_EDGE_LINE_PATTERN.search(line))
 
 
 def validate_text(text: str, path: str) -> ValidationReport:
@@ -119,7 +123,7 @@ def validate_text(text: str, path: str) -> ValidationReport:
                 )
             )
 
-    edge_label_count = len(EDGE_LABEL_PATTERN.findall(text))
+    edge_label_count = count_labeled_edges(text)
     if edge_label_count > 10:
         errors.append(
             Diagnostic("error", "edge-label-limit", f"Diagram uses {edge_label_count} edge labels; hard limit is 10.")
