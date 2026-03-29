@@ -17,6 +17,18 @@ Default mode is standard Mermaid flowchart. Optional C4 support is available onl
 
 Mermaid is the canonical source of truth. `.excalidraw` is a derived artifact.
 
+## Install on Codex
+
+Install the portable skill payload directly from GitHub:
+
+```bash
+$skill-installer install https://github.com/go2ai/architecture-diagram-skill/tree/main/skill
+```
+
+After installation, restart Codex to pick up the new skill.
+
+For Codex-specific usage notes, see [`docs/README.codex.md`](docs/README.codex.md).
+
 ## Current Status
 
 Ready today:

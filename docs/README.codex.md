@@ -2,17 +2,31 @@
 
 `architecture-diagram-sync` is intended to be consumed in Codex as a shared skill whose portable core lives in [`skill/`](../skill/).
 
+## Install
+
+Install the skill directly from GitHub:
+
+```bash
+$skill-installer install https://github.com/go2ai/architecture-diagram-skill/tree/main/skill
+```
+
+Restart Codex to pick up the new skill.
+
 ## Installable Unit
 
 Codex should consume `skill/` as the installable payload. Repository-level files such as `README.md`, `docs/`, `fixtures/`, and `tests/` are support material for humans and for local development of the source project.
 
-## Conservative Usage Model
-
-1. Clone this repository.
-2. Copy or link `skill/` into the skill location already used by your Codex environment.
-3. Expose the skill through your normal Codex skill-loading workflow.
-
 If your environment uses a different registration mechanism, follow that environment's documented flow instead of inventing a new one here.
+
+## What The Skill Does In Codex
+
+Use it when you want Codex to:
+
+- propose or revise Mermaid architecture diagrams
+- keep Mermaid as the canonical source of truth
+- validate diagrams against the supported subset
+- generate derived `.excalidraw` output conservatively
+- review likely architecture drift against repository structure and infrastructure clues
 
 ## What You Can Test Locally First
 
@@ -38,7 +52,6 @@ Available now:
 
 Not promised in v1:
 
-- automated Codex installation
 - universal harness compatibility
 - full Mermaid support
 - verified Excalidraw import compatibility
