@@ -18,6 +18,7 @@ from _common import CANONICAL_EXTENSION, ScriptError, print_json, read_text, res
 
 
 SUPPORTED_HEADERS = {"flowchart TB", "flowchart TD", "flowchart LR"}
+SUPPORTED_C4_HEADERS = {"C4Context", "C4Container", "C4Component"}
 PROHIBITED_PATTERNS: dict[str, re.Pattern[str]] = {
     "init directive": re.compile(r"^\s*%%\{init:", re.IGNORECASE | re.MULTILINE),
     "click directive": re.compile(r"^\s*click\s+", re.IGNORECASE | re.MULTILINE),
@@ -75,12 +76,24 @@ def validate_text(text: str, path: str) -> ValidationReport:
     errors: list[Diagnostic] = []
     warnings: list[Diagnostic] = []
     line_number, header = first_non_empty_line(text)
-    if header not in SUPPORTED_HEADERS:
+    is_flowchart = header in SUPPORTED_HEADERS
+    is_c4 = header in SUPPORTED_C4_HEADERS
+
+    if not is_flowchart and not is_c4:
         errors.append(
             Diagnostic(
                 level="error",
                 code="unsupported-header",
-                message="Unsupported header. Expected one of: flowchart TB, flowchart TD, flowchart LR.",
+                message="Unsupported header. Expected flowchart TB/TD/LR or optional C4Context/C4Container/C4Component.",
+                line=line_number,
+            )
+        )
+    elif is_c4:
+        warnings.append(
+            Diagnostic(
+                level="warning",
+                code="experimental-c4-mode",
+                message="C4 mode is allowed only as an explicit, lightly validated experimental option in v1.",
                 line=line_number,
             )
         )
@@ -95,72 +108,73 @@ def validate_text(text: str, path: str) -> ValidationReport:
                 )
             )
 
-    nodes = {match.group("id"): match.group(0) for match in NODE_PATTERN.finditer(text)}
-    node_count = len(nodes)
-    if node_count > 40:
-        errors.append(Diagnostic("error", "node-limit", f"Diagram defines {node_count} nodes; hard limit is 40."))
-    elif node_count > 25:
-        warnings.append(
-            Diagnostic("warning", "node-limit-warning", f"Diagram defines {node_count} nodes; recommended limit is 25.")
-        )
-
-    labels = []
-    for raw_node in nodes.values():
-        label = re.sub(r"^[A-Za-z_][A-Za-z0-9_]*\s*", "", raw_node)
-        label = label.strip("[](){}\" ")
-        labels.append(label)
-    for label in labels:
-        if len(label) > 60:
-            errors.append(
-                Diagnostic("error", "label-limit", f"Node label exceeds hard limit of 60 characters: {label[:40]}...")
+    if is_flowchart:
+        nodes = {match.group("id"): match.group(0) for match in NODE_PATTERN.finditer(text)}
+        node_count = len(nodes)
+        if node_count > 40:
+            errors.append(Diagnostic("error", "node-limit", f"Diagram defines {node_count} nodes; hard limit is 40."))
+        elif node_count > 25:
+            warnings.append(
+                Diagnostic("warning", "node-limit-warning", f"Diagram defines {node_count} nodes; recommended limit is 25.")
             )
-        elif len(label) > 40:
+
+        labels = []
+        for raw_node in nodes.values():
+            label = re.sub(r"^[A-Za-z_][A-Za-z0-9_]*\s*", "", raw_node)
+            label = label.strip("[](){}\" ")
+            labels.append(label)
+        for label in labels:
+            if len(label) > 60:
+                errors.append(
+                    Diagnostic("error", "label-limit", f"Node label exceeds hard limit of 60 characters: {label[:40]}...")
+                )
+            elif len(label) > 40:
+                warnings.append(
+                    Diagnostic(
+                        "warning",
+                        "label-limit-warning",
+                        f"Node label exceeds recommended limit of 40 characters: {label[:40]}...",
+                    )
+                )
+
+        edge_label_count = count_labeled_edges(text)
+        if edge_label_count > 10:
+            errors.append(
+                Diagnostic("error", "edge-label-limit", f"Diagram uses {edge_label_count} edge labels; hard limit is 10.")
+            )
+        elif edge_label_count > 6:
             warnings.append(
                 Diagnostic(
                     "warning",
-                    "label-limit-warning",
-                    f"Node label exceeds recommended limit of 40 characters: {label[:40]}...",
+                    "edge-label-limit-warning",
+                    f"Diagram uses {edge_label_count} edge labels; recommended limit is 6.",
                 )
             )
 
-    edge_label_count = count_labeled_edges(text)
-    if edge_label_count > 10:
-        errors.append(
-            Diagnostic("error", "edge-label-limit", f"Diagram uses {edge_label_count} edge labels; hard limit is 10.")
-        )
-    elif edge_label_count > 6:
-        warnings.append(
-            Diagnostic(
-                "warning",
-                "edge-label-limit-warning",
-                f"Diagram uses {edge_label_count} edge labels; recommended limit is 6.",
-            )
-        )
+        subgraph_depth = 0
+        subgraph_count = 0
+        for line_index, line in enumerate(text.splitlines(), start=1):
+            stripped = line.strip()
+            if SUBGRAPH_PATTERN.match(line):
+                subgraph_count += 1
+                subgraph_depth += 1
+                if subgraph_depth > 1:
+                    errors.append(
+                        Diagnostic("error", "nested-subgraph", "Nested subgraphs are not supported in v1.", line_index)
+                    )
+            elif stripped == "end" and subgraph_depth > 0:
+                subgraph_depth -= 1
 
-    subgraph_depth = 0
-    subgraph_count = 0
-    for line_index, line in enumerate(text.splitlines(), start=1):
-        stripped = line.strip()
-        if SUBGRAPH_PATTERN.match(line):
-            subgraph_count += 1
-            subgraph_depth += 1
-            if subgraph_depth > 1:
-                errors.append(
-                    Diagnostic("error", "nested-subgraph", "Nested subgraphs are not supported in v1.", line_index)
+        if subgraph_count > 4:
+            errors.append(Diagnostic("error", "subgraph-limit", f"Diagram uses {subgraph_count} subgraphs; hard limit is 4."))
+        elif subgraph_count > 3:
+            warnings.append(
+                Diagnostic(
+                    "warning",
+                    "subgraph-limit-warning",
+                    f"Diagram uses {subgraph_count} subgraphs; recommended limit is 3.",
                 )
-        elif stripped == "end" and subgraph_depth > 0:
-            subgraph_depth -= 1
-
-    if subgraph_count > 4:
-        errors.append(Diagnostic("error", "subgraph-limit", f"Diagram uses {subgraph_count} subgraphs; hard limit is 4."))
-    elif subgraph_count > 3:
-        warnings.append(
-            Diagnostic(
-                "warning",
-                "subgraph-limit-warning",
-                f"Diagram uses {subgraph_count} subgraphs; recommended limit is 3.",
             )
-        )
 
     return ValidationReport(path=path, errors=errors, warnings=warnings)
 

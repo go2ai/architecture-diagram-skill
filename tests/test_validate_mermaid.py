@@ -73,6 +73,59 @@ class ValidateMermaidEdgeLabelTests(unittest.TestCase):
         warning_codes = {warning.code for warning in report.warnings}
         self.assertNotIn("edge-label-limit-warning", warning_codes)
 
+
+class ValidateMermaidC4Tests(unittest.TestCase):
+    def test_c4_context_header_is_recognized(self) -> None:
+        report = validate_mermaid.validate_text(
+            "\n".join(
+                [
+                    "C4Context",
+                    "Person(user, \"User\")",
+                    "System(app, \"Application\")",
+                    "Rel(user, app, \"Uses\")",
+                ]
+            ),
+            path="<memory>",
+        )
+
+        self.assertTrue(report.is_valid)
+        warning_codes = {warning.code for warning in report.warnings}
+        self.assertIn("experimental-c4-mode", warning_codes)
+
+    def test_c4_container_header_is_recognized(self) -> None:
+        report = validate_mermaid.validate_text(
+            "\n".join(
+                [
+                    "C4Container",
+                    "Person(user, \"User\")",
+                    "System_Boundary(sys, \"System\") {",
+                    "  Container(api, \"API\")",
+                    "}",
+                    "Rel(user, api, \"Calls\")",
+                ]
+            ),
+            path="<memory>",
+        )
+
+        self.assertTrue(report.is_valid)
+        warning_codes = {warning.code for warning in report.warnings}
+        self.assertIn("experimental-c4-mode", warning_codes)
+
+    def test_async_flow_c4_header_is_not_recognized(self) -> None:
+        report = validate_mermaid.validate_text(
+            "\n".join(
+                [
+                    "C4Dynamic",
+                    "Person(user, \"User\")",
+                    "Rel(user, worker, \"Triggers\")",
+                ]
+            ),
+            path="<memory>",
+        )
+
+        error_codes = {error.code for error in report.errors}
+        self.assertIn("unsupported-header", error_codes)
+
     def test_actual_labeled_edges_are_counted(self) -> None:
         report = validate_mermaid.validate_text(
             "\n".join(

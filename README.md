@@ -13,6 +13,8 @@ In its current v1 form, the project can:
 - detect likely architecture drift with simple, explicit heuristics
 - run repeatable local tests and smoke tests against sample target repositories
 
+Default mode is standard Mermaid flowchart. Optional C4 support is available only when explicitly requested, and it is narrower and more conservative than the default path.
+
 Mermaid is the canonical source of truth. `.excalidraw` is a derived artifact.
 
 ## Current Status

@@ -14,6 +14,14 @@ v1 supports only these flowchart headers:
 
 All architecture diagrams handled by the skill should use one of those forms.
 
+Optional experimental mode is also allowed when the user explicitly asks for C4:
+
+- `C4Context`
+- `C4Container`
+- `C4Component`
+
+This C4 mode is narrower and more lightly validated than the default flowchart mode.
+
 ## Supported Building Blocks
 
 Supported and preferred:
@@ -29,6 +37,13 @@ Recommended node style:
 - one logical system element per node
 - one node identifier reused consistently inside the file
 - labels that fit on one line when possible
+
+For optional C4 mode:
+
+- use `C4Context` for system-context diagrams
+- use `C4Container` for container diagrams
+- use `C4Component` only when explicitly needed
+- keep async flow diagrams in standard Mermaid flowchart, not C4
 
 ## Practical Limits
 
@@ -58,7 +73,7 @@ The following are not supported in v1:
 
 - `graph` syntax variants outside `flowchart`
 - `flowchart BT` or `flowchart RL`
-- sequence, class, state, ER, Gantt, journey, pie, git, C4, or mindmap diagrams
+- sequence, class, state, ER, Gantt, journey, pie, git, or mindmap diagrams
 - clickable nodes, callbacks, or `click` directives
 - custom Mermaid initialization blocks such as `%%{init: ...}%%`
 - embedded HTML, Markdown formatting tricks, or multiline layout hacks
@@ -76,6 +91,7 @@ These may parse in Mermaid but should not be used if the diagram is intended to 
 - using shape variation as the only indicator of node type
 - one node connected to nearly every other node
 - diagrams that depend on exact renderer spacing to remain understandable
+- forcing C4 onto operational or implementation-heavy diagrams where flowchart is the clearer fit
 
 ## Authoring Guidance
 
@@ -87,3 +103,5 @@ These may parse in Mermaid but should not be used if the diagram is intended to 
 ## v1 Limitations
 
 v1 is optimized for shared portability across harnesses and future `.excalidraw` generation. It does not attempt to preserve every Mermaid feature, every layout nuance, or renderer-specific behavior.
+
+Flowchart mode remains the default and safest path. C4 support is explicit, optional, and lightly validated in v1.

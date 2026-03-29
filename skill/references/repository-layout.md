@@ -41,7 +41,8 @@ Recommended patterns:
 - `system-context.mmd`
 - `containers.mmd`
 - `components-billing.mmd`
-- `async-order-flow.mmd`
+- `async-ingestion-flow.mmd`
+- `async-video-processing-flow.mmd`
 - `async-email-delivery.mmd`
 
 Rules:
@@ -49,6 +50,8 @@ Rules:
 - use names that describe viewpoint, not ticket numbers
 - keep names short enough to scan in directory listings
 - prefer one diagram per file
+- for async diagrams, name the file after the primary flow it explains
+- avoid generic names like `async-job-flow.mmd` unless there is only one meaningful async flow and that generic name is truly the clearest one
 - avoid date-stamped file names for current diagrams
 - avoid `final`, `new`, `v2`, or similar temporary suffixes
 

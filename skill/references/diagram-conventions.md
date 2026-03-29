@@ -4,6 +4,8 @@ This document defines how architecture diagrams should be scoped, named, and spl
 
 The default rule is simple: prefer several small diagrams with clear purpose over one large diagram that tries to explain everything.
 
+Default mode is the conservative Mermaid flowchart subset. Only switch to C4 when the user explicitly asks for it and the diagram type benefits from it.
+
 ## Diagram Categories
 
 Use separate diagrams for separate questions.
@@ -11,6 +13,8 @@ Use separate diagrams for separate questions.
 Before writing or updating a diagram, choose the abstraction level first. Do not mix context, deployable containers, and low-level runtime internals in the same file.
 
 ### 1. System Context
+
+If C4 mode is explicitly requested, this diagram type should use `C4Context`.
 
 Use a system context diagram when the goal is to show:
 
@@ -28,6 +32,10 @@ Do not use this diagram to document internal Lambdas, workers, queues, buckets, 
 
 ### 2. Containers And Components
 
+If C4 mode is explicitly requested, container-level diagrams should use `C4Container`.
+
+Use `C4Component` only when component-level detail is explicitly needed.
+
 Use a container or component diagram when the goal is to show:
 
 - deployable services
@@ -44,9 +52,15 @@ Prefer deployable/runtime containers and primary stores.
 
 Avoid routers, validators, packages, provider-specific internal components, and implementation-detail subcomponents unless the diagram is explicitly component-level.
 
+Avoid disconnected external systems in container diagrams. If an external dependency matters in that view, show at least one meaningful relationship to an internal container. Otherwise omit it.
+
+Simplify carefully. Do not compress an indirect runtime path into a direct edge when the middle hop is an important runtime boundary.
+
 Do not mix this with a full async event narrative unless the async flow is very small.
 
 ### 3. Async Flows
+
+Keep async flows in regular Mermaid flowchart mode, even when C4 is requested elsewhere.
 
 Use an async flow diagram when the goal is to show:
 
@@ -63,6 +77,8 @@ Typical size:
 Focus on one primary async path. Prefer short labels and minimal narration.
 
 Avoid secondary branches unless they materially change understanding.
+
+When reviewing async diagrams, prefer removing secondary branches unless they materially change understanding.
 
 Do not overload a structural component diagram with every async edge if that makes the main layout harder to read.
 
@@ -82,6 +98,7 @@ Avoid mixing:
 - system boundaries, deployable containers, and low-level cloud/runtime internals in one diagram
 - broad platform topology and step-by-step message flow in one diagram
 - operational infrastructure detail that is irrelevant to the question the diagram answers
+- C4 context/container structure with flowchart-style internal runtime narration unless clearly justified
 
 ## Naming Conventions
 
@@ -134,6 +151,10 @@ Create a new diagram when:
 - the diagram would otherwise need multiple abstraction levels
 - the audience for the new information is different from the existing diagram's audience
 
+If C4 is requested, switch only the diagrams where C4 improves the architecture semantics. Do not force C4 onto async flow diagrams.
+
 ## v1 Limitations
 
 v1 does not attempt to standardize every possible diagram type. It standardizes the minimum set needed for repeatable architecture maintenance: context, containers/components, and async flows.
+
+C4 support is optional, explicit, and narrower than the default flowchart mode. If the repository is too operational or implementation-heavy, staying in flowchart mode is usually the safer choice even when C4 is requested.
