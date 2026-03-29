@@ -8,6 +8,8 @@ The default rule is simple: prefer several small diagrams with clear purpose ove
 
 Use separate diagrams for separate questions.
 
+Before writing or updating a diagram, choose the abstraction level first. Do not mix context, deployable containers, and low-level runtime internals in the same file.
+
 ### 1. System Context
 
 Use a system context diagram when the goal is to show:
@@ -22,7 +24,7 @@ Typical size:
 - 5-12 nodes
 - little or no internal component detail
 
-Do not use this diagram to document internal jobs, queues, tables, or component wiring.
+Do not use this diagram to document internal Lambdas, workers, queues, buckets, tables, or low-level cloud/runtime internals unless one of those is itself a true first-class system boundary.
 
 ### 2. Containers And Components
 
@@ -37,6 +39,10 @@ Typical size:
 
 - 6-20 nodes
 - grouped by bounded area or deployment boundary when useful
+
+Prefer deployable/runtime containers and primary stores.
+
+Avoid routers, validators, packages, provider-specific internal components, and implementation-detail subcomponents unless the diagram is explicitly component-level.
 
 Do not mix this with a full async event narrative unless the async flow is very small.
 
@@ -54,6 +60,10 @@ Typical size:
 - 4-15 nodes
 - edges are usually more important than node variety
 
+Focus on one primary async path. Prefer short labels and minimal narration.
+
+Avoid secondary branches unless they materially change understanding.
+
 Do not overload a structural component diagram with every async edge if that makes the main layout harder to read.
 
 ## Granularity Rules
@@ -69,6 +79,7 @@ Good examples:
 Avoid mixing:
 
 - people, high-level systems, and low-level classes in one diagram
+- system boundaries, deployable containers, and low-level cloud/runtime internals in one diagram
 - broad platform topology and step-by-step message flow in one diagram
 - operational infrastructure detail that is irrelevant to the question the diagram answers
 
