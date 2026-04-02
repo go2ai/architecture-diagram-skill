@@ -193,7 +193,7 @@ def validate_path(path: Path) -> list[ValidationReport]:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Validate Mermaid .mmd files for architecture-diagram-sync v1.")
+    parser = argparse.ArgumentParser(description="Validate Mermaid .mmd files for design-architecture v1.")
     parser.add_argument("path", help="Path to a .mmd file or a directory containing .mmd files.")
     parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON in addition to exit status.")
     return parser

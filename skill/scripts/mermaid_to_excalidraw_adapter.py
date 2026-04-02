@@ -240,7 +240,7 @@ def diagram_to_excalidraw(model: DiagramModel) -> dict[str, object]:
     return {
         "type": "excalidraw",
         "version": 2,
-        "source": "architecture-diagram-sync",
+        "source": "design-architecture",
         "elements": elements,
         "appState": {
             "gridSize": None,

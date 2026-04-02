@@ -1,6 +1,6 @@
 # Codex Installation
 
-This repository is the source project for the `architecture-diagram-sync` skill.
+This repository is the source project for the `design-architecture` skill.
 
 For Codex, the consumable unit is the [`skill/`](../skill/) directory. Everything else in the repository exists to support documentation, local testing, fixtures, and development.
 

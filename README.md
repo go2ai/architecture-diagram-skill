@@ -1,6 +1,6 @@
-# architecture-diagram-sync
+# design-architecture
 
-`architecture-diagram-sync` is the source repository for a shared skill that helps keep architecture diagrams aligned with the codebase they describe.
+`design-architecture` is the source repository for a shared skill that helps keep architecture diagrams aligned with the codebase they describe.
 
 The installable, portable core lives in [`skill/`](skill/). The rest of this repository exists to support public documentation, harness-specific onboarding, fixtures, tests, and local development.
 
@@ -22,7 +22,7 @@ Mermaid is the canonical source of truth. `.excalidraw` is a derived artifact.
 Install the portable skill payload directly from GitHub:
 
 ```bash
-$skill-installer install https://github.com/go2ai/architecture-diagram-skill/tree/main/skill
+$skill-installer install https://github.com/go2ai/architecture-diagram-skill/tree/main/skill --name design-architecture
 ```
 
 After installation, restart Codex to pick up the new skill.

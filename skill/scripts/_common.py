@@ -1,4 +1,4 @@
-"""Shared helpers for the architecture-diagram-sync script entry points."""
+"""Shared helpers for the design-architecture script entry points."""
 
 from __future__ import annotations
 
@@ -131,4 +131,3 @@ def iter_text_files(root: Path) -> Iterator[Path]:
             continue
         if path.suffix.lower() in TEXT_EXTENSIONS and path.stat().st_size <= MAX_TEXT_FILE_BYTES:
             yield path
-

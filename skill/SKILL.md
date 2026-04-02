@@ -1,9 +1,11 @@
 ---
-name: architecture-diagram-sync
-description: Use this skill only for repository architecture diagram tasks: proposing or revising Mermaid diagrams under docs/architecture, checking diagram abstraction level, validating Mermaid against the supported subset, and reviewing diagram drift against code or infrastructure. Do not use this skill for generic planning, brainstorming, visual companion workflows, or broad documentation tasks unrelated to architecture diagrams.
+name: design-architecture
+description: "Use this skill only for repository architecture diagram tasks: proposing or revising Mermaid diagrams under docs/architecture, checking diagram abstraction level, validating Mermaid against the supported subset, and reviewing diagram drift against code or infrastructure. Do not use this skill for generic planning, brainstorming, visual companion workflows, or broad documentation tasks unrelated to architecture diagrams."
+metadata:
+  short-description: Maintain Mermaid architecture diagrams and review architecture drift
 ---
 
-# architecture-diagram-sync
+# design-architecture
 
 Use this skill when working on repository architecture diagrams, especially when checking whether diagrams still match the codebase or when updating architecture documentation.
 

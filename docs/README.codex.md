@@ -1,13 +1,13 @@
 # Codex
 
-`architecture-diagram-sync` is intended to be consumed in Codex as a shared skill whose portable core lives in [`skill/`](../skill/).
+`design-architecture` is intended to be consumed in Codex as a shared skill whose portable core lives in [`skill/`](../skill/).
 
 ## Install
 
 Install the skill directly from GitHub:
 
 ```bash
-$skill-installer install https://github.com/go2ai/architecture-diagram-skill/tree/main/skill
+$skill-installer install https://github.com/go2ai/architecture-diagram-skill/tree/main/skill --name design-architecture
 ```
 
 Restart Codex to pick up the new skill.

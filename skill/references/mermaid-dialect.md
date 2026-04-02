@@ -1,6 +1,6 @@
 # Mermaid Dialect
 
-This document defines the Mermaid subset supported by `architecture-diagram-sync` v1.
+This document defines the Mermaid subset supported by `design-architecture` v1.
 
 The goal is predictability and convertibility, especially for future generation of editable `.excalidraw` artifacts. Full Mermaid coverage is explicitly out of scope.
 

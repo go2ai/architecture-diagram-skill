@@ -1,6 +1,6 @@
 # Development
 
-This repository is the source project for the `architecture-diagram-sync` skill.
+This repository is the source project for the `design-architecture` skill.
 
 ## Minimum Requirements
 

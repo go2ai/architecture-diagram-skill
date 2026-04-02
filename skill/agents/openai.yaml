@@ -1,7 +1,7 @@
 interface:
-  display_name: "Architecture Diagram Sync"
+  display_name: "Design Architecture"
   short_description: "Maintain Mermaid architecture diagrams and review architecture drift."
-  default_prompt: "Use this skill only for repository architecture diagram tasks: propose or revise Mermaid diagrams under docs/architecture, validate the supported Mermaid subset, and review diagram drift against code or infrastructure. Keep Mermaid as the canonical source of truth and treat Excalidraw as derived."
+  default_prompt: "Use $design-architecture to propose or revise Mermaid architecture diagrams under docs/architecture, validate the supported Mermaid subset, and review architecture drift against code or infrastructure."
 
 policy:
   allow_implicit_invocation: false
